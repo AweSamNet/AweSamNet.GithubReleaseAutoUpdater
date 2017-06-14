@@ -57,7 +57,7 @@ namespace AweSamNet.Integration.GitHubReleaseAutoUpdater
         /// <summary>
         /// Checks for the latest version and manages the download of a newer version.
         /// </summary>
-        public async void CheckLatestVersion()
+        public async Task CheckLatestVersion()
         {
             var settings = UpdaterProvider.GetSettings();
             GitHubVersion latest = GetLatestVersion();
@@ -72,15 +72,13 @@ namespace AweSamNet.Integration.GitHubReleaseAutoUpdater
             
             List<GitHubVersion> missedReleases = new List<GitHubVersion>();
 
+            missedReleases = releases;
+            
             // get the missed releases
             if (current != null)
             {
                 var index = releases.IndexOf(current);
-                missedReleases = releases.GetRange(index, releases.Count - index + 1);
-            }
-            else
-            {
-                missedReleases = releases;
+                if(index >= 0) missedReleases = releases.GetRange(index, releases.Count - index + 1);
             }
 
             // build the release notes
@@ -107,6 +105,7 @@ namespace AweSamNet.Integration.GitHubReleaseAutoUpdater
                 default:
                     break;
             }
+            UpdaterProvider.GetSettings();
         }
 
         /// <summary>
